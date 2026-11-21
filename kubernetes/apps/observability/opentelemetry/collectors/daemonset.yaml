@@ -164,9 +164,9 @@ spec:
 
     exporters:
       otlp_http/gateway:
-        endpoint: https://otel-gateway-collector.observability.svc.cluster.local:4318
-        tls:
-          ca_file: /var/run/trusted-roots/ca.crt
+        endpoint: http://otel-gateway-collector.observability.svc.cluster.local:4318
+        # tls:
+        #   ca_file: /var/run/trusted-roots/ca.crt
         compression: gzip
         timeout: 10s
         retry_on_failure:
