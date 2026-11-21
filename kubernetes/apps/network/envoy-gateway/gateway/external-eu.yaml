@@ -17,6 +17,7 @@ spec:
           tolerations:
             - operator: Exists
           labels:
+            ingress.netpol.bitshift.systems/o11y: allow
             ingress.netpol.bitshift.systems/host: allow
             ingress.netpol.bitshift.systems/internet: allow
             egress.netpol.bitshift.systems/internet-https: allow  # allow routing to other services

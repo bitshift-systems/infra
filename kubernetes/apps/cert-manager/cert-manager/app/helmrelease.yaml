@@ -26,14 +26,17 @@ spec:
     webhook:
       replicaCount: 2
       podLabels:
+        ingress.netpol.bitshift.systems/o11y: allow
         egress.netpol.bitshift.systems/apiserver: allow
         ingress.netpol.bitshift.systems/apiserver: allow
       podDisruptionBudget:
         enabled: true
     cainjector:
       podLabels:
+        ingress.netpol.bitshift.systems/o11y: allow
         egress.netpol.bitshift.systems/apiserver: allow
     podLabels:
+      ingress.netpol.bitshift.systems/o11y: allow
       egress.netpol.bitshift.systems/apiserver: allow
       egress.netpol.bitshift.systems/internet-https: allow
       egress.netpol.bitshift.systems/cloudflare-dns: allow

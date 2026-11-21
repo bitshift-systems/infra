@@ -93,3 +93,17 @@ spec:
         - matchExpressions:
             - key: io.kubernetes.pod.namespace
               operator: Exists
+    # Host-networked collectors and Cilium share the node identity with kubelet.
+    - toEntities:
+        - host
+        - remote-node
+      toPorts:
+        - ports:
+            - port: "8888" # OTel daemonset metrics
+              protocol: TCP
+            - port: "9962" # Cilium agent metrics
+              protocol: TCP
+            - port: "9963" # Cilium operator metrics
+              protocol: TCP
+            - port: "10250" # Kubelet metrics and cAdvisor
+              protocol: TCP

@@ -48,11 +48,11 @@ spec:
   env:
     - name: GOMEMLIMIT
       value: 640MiB
-    - name: NEW_RELIC_API_KEY
+    - name: GCLOUD_TOKEN
       valueFrom:
         secretKeyRef:
-          key: api-key
-          name: new-relic-api-key
+          key: token
+          name: gcloud-token
 
   podSecurityContext:
     runAsNonRoot: true
@@ -234,11 +234,17 @@ spec:
         send_batch_size: 1024
         timeout: 5s
 
+    extensions:
+      basicauth/grafana_cloud:
+        client_auth:
+          username: "1934240"
+          password: "${env:GCLOUD_TOKEN}"
+
     exporters:
       otlp_http:
-        endpoint: https://otlp.eu01.nr-data.net
-        headers:
-          api-key: ${env:NEW_RELIC_API_KEY}
+        endpoint: https://otlp-gateway-prod-gb-south-1.grafana.net/otlp
+        auth:
+          authenticator: basicauth/grafana_cloud
         compression: gzip
         timeout: 10s
         retry_on_failure:

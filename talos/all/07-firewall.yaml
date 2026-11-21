@@ -30,6 +30,8 @@ portSelector:
 ingress:
   - subnet: 10.42.43.0/24
   - subnet: fd42:43::/64
+  - subnet: 10.244.0.0/16
+  - subnet: fd00::/48
   - subnet: 57.129.192.57/32 # lon1
   - subnet: 2001:41d0:801:2000::9628/128 # lon1
 
@@ -66,6 +68,7 @@ portSelector:
     - 2020
     - 9090
     - 9100
+    - 8888 # OTel daemonset metrics
     - 4244 # hubble server, for hubble-relay
     - 9962
     - 9963

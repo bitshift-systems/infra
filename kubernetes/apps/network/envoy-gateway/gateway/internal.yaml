@@ -19,6 +19,7 @@ spec:
           nodeSelector:
             kubernetes.io/hostname: lon1
           labels:
+            ingress.netpol.bitshift.systems/o11y: allow
             ingress.netpol.bitshift.systems/host: allow
         container:
           image: mirror.gcr.io/envoyproxy/envoy:v1.40.2

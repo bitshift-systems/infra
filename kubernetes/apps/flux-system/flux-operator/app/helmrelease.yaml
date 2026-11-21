@@ -12,6 +12,7 @@ spec:
   interval: 30m
   values:
     commonLabels:
+      ingress.netpol.bitshift.systems/o11y: allow
       egress.netpol.bitshift.systems/apiserver: allow
       egress.netpol.bitshift.systems/internet-https: allow
     serviceMonitor:
