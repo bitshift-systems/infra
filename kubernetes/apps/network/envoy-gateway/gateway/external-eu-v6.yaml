@@ -1,0 +1,161 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/gateway.envoyproxy.io/envoyproxy_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: external-eu-v6
+  namespace: network
+spec:
+  logging:
+    level:
+      default: info
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyDaemonSet:
+        pod:
+          tolerations:
+            - operator: Exists
+          # Pod netns sysctls start from kernel defaults (cubic); match the hosts' tuning.
+          securityContext:
+            sysctls:
+              - name: net.ipv4.tcp_congestion_control
+                value: bbr
+              - name: net.ipv4.tcp_slow_start_after_idle
+                value: "0"
+              - name: net.ipv4.tcp_notsent_lowat
+                value: "131072"
+        # Surge on the same node so a rollout never leaves a node without envoy.
+        strategy:
+          type: RollingUpdate
+          rollingUpdate:
+            maxSurge: 1
+            maxUnavailable: 0
+        container:
+          image: mirror.gcr.io/envoyproxy/envoy:v1.40.2
+          resources:
+            requests:
+              cpu: 250m
+              memory: 128Mi
+            limits:
+              memory: 1Gi
+        # A shutdown-manager restart runs its preStop hook, which drains envoy
+        # for good; don't restart it over slow probes on a busy node.
+        patch:
+          type: StrategicMerge
+          value:
+            spec:
+              template:
+                spec:
+                  containers:
+                    - name: shutdown-manager
+                      livenessProbe:
+                        timeoutSeconds: 5
+                        failureThreshold: 6
+      envoyService:
+        type: LoadBalancer
+        allocateLoadBalancerNodePorts: false
+        externalTrafficPolicy: Local
+        patch:
+          type: StrategicMerge
+          value:
+            spec:
+              internalTrafficPolicy: Local
+  shutdown:
+    drainTimeout: 180s
+
+  telemetry:
+    accessLog:
+      settings:
+        # Envoy Gateway's default fields, with the path logged without its query
+        # string: link preview requests carry the previewed URL there.
+        - format:
+            type: JSON
+            json:
+              ":authority": "%REQ(:AUTHORITY)%"
+              bytes_received: "%BYTES_RECEIVED%"
+              bytes_sent: "%BYTES_SENT%"
+              connection_termination_details: "%CONNECTION_TERMINATION_DETAILS%"
+              downstream_local_address: "%DOWNSTREAM_LOCAL_ADDRESS%"
+              downstream_remote_address: "%DOWNSTREAM_REMOTE_ADDRESS%"
+              duration: "%DURATION%"
+              method: "%REQ(:METHOD)%"
+              protocol: "%PROTOCOL%"
+              requested_server_name: "%REQUESTED_SERVER_NAME%"
+              response_code: "%RESPONSE_CODE%"
+              response_code_details: "%RESPONSE_CODE_DETAILS%"
+              response_flags: "%RESPONSE_FLAGS%"
+              route_name: "%ROUTE_NAME%"
+              start_time: "%START_TIME%"
+              upstream_cluster: "%UPSTREAM_CLUSTER%"
+              upstream_host: "%UPSTREAM_HOST%"
+              upstream_local_address: "%UPSTREAM_LOCAL_ADDRESS%"
+              upstream_transport_failure_reason: "%UPSTREAM_TRANSPORT_FAILURE_REASON%"
+              user-agent: "%REQ(USER-AGENT)%"
+              x-envoy-origin-path: "%REQ_WITHOUT_QUERY(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+              x-envoy-upstream-service-time: "%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%"
+              x-forwarded-for: "%REQ(X-FORWARDED-FOR)%"
+              x-request-id: "%REQ(X-REQUEST-ID)%"
+          matches:
+            - "!has(request.host) || request.host != 'preview.sable.moe'"
+          sinks:
+            - file:
+                path: /dev/stdout
+              type: File
+
+    metrics:
+      prometheus:
+        compression:
+          type: Zstd
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/gateway.networking.k8s.io/gatewayclass_v1.json
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: external-eu-v6
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: external-eu-v6
+    namespace: network
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/gateway.networking.k8s.io/gateway_v1.json
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: &name external-eu-v6
+  namespace: network
+  annotations:
+    external-dns.kubernetes.io/target: "2001:41d0:801:2000::9628"
+spec:
+  gatewayClassName: *name
+  addresses:
+    - type: IPAddress
+      value: 2001:41d0:801:2000::9628
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values: [network, cert-manager]
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.bitshift.systems"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: bitshift-systems-tls
