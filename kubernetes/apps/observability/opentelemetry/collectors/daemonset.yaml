@@ -97,7 +97,7 @@ spec:
           cpu: {}
           memory: {}
           disk: {}
-          filesystem: {}
+          # filesystem: {}
           load: {}
           network: {}
 
