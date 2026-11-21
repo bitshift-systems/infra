@@ -9,7 +9,7 @@ spec:
     egress: false
   endpointSelector:
     matchLabels:
-      egress.netpol.home.arpa/o11y: allow
+      egress.netpol.bitshift.systems/o11y: allow
   egress:
     - toEndpoints:
         - matchLabels:
@@ -41,7 +41,7 @@ spec:
   ingress:
     - fromEndpoints:
         - matchLabels:
-            egress.netpol.home.arpa/o11y: allow
+            egress.netpol.bitshift.systems/o11y: allow
           matchExpressions:
             - key: io.kubernetes.pod.namespace
               operator: Exists
@@ -66,7 +66,7 @@ spec:
     egress: false
   endpointSelector:
     matchLabels:
-      ingress.netpol.home.arpa/o11y: allow
+      ingress.netpol.bitshift.systems/o11y: allow
   ingress:
     - fromEndpoints:
         - matchLabels:
@@ -89,7 +89,7 @@ spec:
   egress:
     - toEndpoints:
         - matchLabels:
-            ingress.netpol.home.arpa/o11y: allow
+            ingress.netpol.bitshift.systems/o11y: allow
         - matchExpressions:
             - key: io.kubernetes.pod.namespace
               operator: Exists

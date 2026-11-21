@@ -12,9 +12,9 @@ kind: OpenTelemetryCollector
 metadata:
   name: otel-daemonset
   labels:
-    egress.netpol.home.arpa/o11y: allow
-    egress.netpol.home.arpa/apiserver: allow
-    ingress.netpol.home.arpa/o11y: allow
+    egress.netpol.bitshift.systems/o11y: allow
+    egress.netpol.bitshift.systems/apiserver: allow
+    ingress.netpol.bitshift.systems/o11y: allow
 spec:
   mode: daemonset
   hostNetwork: true  # so talos nodes can forward logs over localhost

@@ -13,11 +13,11 @@ metadata:
   name: otel-gateway
   labels:
     # The operator propagates these labels to the collector and target allocator.
-    egress.netpol.home.arpa/apiserver: allow
-    egress.netpol.home.arpa/internet: allow
-    ingress.netpol.home.arpa/host: allow
-    ingress.netpol.home.arpa/o11y: allow
-    ingress.netpol.home.arpa/internal: allow
+    egress.netpol.bitshift.systems/apiserver: allow
+    egress.netpol.bitshift.systems/internet: allow
+    ingress.netpol.bitshift.systems/host: allow
+    ingress.netpol.bitshift.systems/o11y: allow
+    ingress.netpol.bitshift.systems/internal: allow
 spec:
   mode: statefulset
   replicas: 2
