@@ -16,6 +16,9 @@ spec:
       repository: mirror.gcr.io/coredns/coredns
     replicaCount: 2
     k8sAppLabelOverride: kube-dns
+    podLabels:
+      egress.netpol.bitshift.systems/apiserver: allow
+      egress.netpol.bitshift.systems/cloudflare-dns: allow
     serviceAccount:
       create: true
     service:

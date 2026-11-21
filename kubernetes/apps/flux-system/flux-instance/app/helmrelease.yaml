@@ -173,3 +173,29 @@ spec:
             target:
               kind: Deployment
               name: kustomize-controller
+
+          ### Add netpols to relevant controllers
+          - target:
+              kind: Deployment
+              name: notification-controller
+            patch: |
+              - op: add
+                path: /spec/template/metadata/labels/ingress.netpol.bitshift.systems~1external
+                value: allow
+          - target:
+              kind: Deployment
+              name: (source-controller|helm-controller|kustomize-controller|notification-controller)
+            patch: |
+              - op: add
+                path: /spec/template/metadata/labels/egress.netpol.bitshift.systems~1apiserver
+                value: allow
+              - op: add
+                path: /spec/template/metadata/labels/ingress.netpol.bitshift.systems~1o11y
+                value: allow
+          - target:
+              kind: Deployment
+              name: (source-controller|helm-controller|notification-controller)
+            patch: |
+              - op: add
+                path: /spec/template/metadata/labels/egress.netpol.bitshift.systems~1internet-https
+                value: allow

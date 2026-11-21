@@ -11,6 +11,20 @@ spec:
     name: envoy-gateway
   interval: 30m
   values:
+    deployment:
+      pod:
+        labels:
+          egress.netpol.bitshift.systems/apiserver: allow
+          ingress.netpol.bitshift.systems/host: allow
+          ingress.netpol.bitshift.systems/o11y: allow
+          ingress.netpol.bitshift.systems/apiserver: allow
+
+    certgen:
+      job:
+        pod:
+          labels:
+            egress.netpol.bitshift.systems/apiserver: allow
+
     config:
       envoyGateway:
         extensionApis:

@@ -11,6 +11,9 @@ spec:
     name: flux-operator
   interval: 30m
   values:
+    commonLabels:
+      egress.netpol.bitshift.systems/apiserver: allow
+      egress.netpol.bitshift.systems/internet-https: allow
     serviceMonitor:
       create: true
     web:

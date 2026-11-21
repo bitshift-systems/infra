@@ -17,9 +17,18 @@ spec:
     certController:
       image:
         repository: ghcr.io/external-secrets/external-secrets
+      podLabels:
+        egress.netpol.bitshift.systems/apiserver: allow
+        ingress.netpol.bitshift.systems/apiserver: allow
+    podLabels:
+      egress.netpol.bitshift.systems/apiserver: allow
+      egress.netpol.bitshift.systems/internet-https: allow
     webhook:
       image:
         repository: ghcr.io/external-secrets/external-secrets
+      podLabels:
+        egress.netpol.bitshift.systems/apiserver: allow
+        ingress.netpol.bitshift.systems/apiserver: allow
       replicaCount: 2
       podDisruptionBudget:
         enabled: true

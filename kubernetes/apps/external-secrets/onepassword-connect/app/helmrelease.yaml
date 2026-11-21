@@ -18,5 +18,8 @@ spec:
       credentialsName: op-credentials
       credentialsKey: 1password-credentials.json
       serviceType: ClusterIP
+      podLabels:
+        ingress.netpol.bitshift.systems/host: allow
+        egress.netpol.bitshift.systems/internet-https: allow
     operator:
       create: false
