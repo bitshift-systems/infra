@@ -1,0 +1,95 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: np-e-a-to-otlp
+spec:
+  enableDefaultDeny:
+    egress: false
+  endpointSelector:
+    matchLabels:
+      egress.netpol.home.arpa/o11y: allow
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/component: opentelemetry-collector
+            app.kubernetes.io/instance: observability.otel-gateway
+      toPorts:
+        - ports:
+            - # OTLP/gRPC
+              protocol: TCP
+              port: "4317"
+
+            - # OTLP/HTTP
+              protocol: TCP
+              port: "4318"
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: np-i-a-from-otel-exporters
+spec:
+  enableDefaultDeny:
+    ingress: false
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/component: opentelemetry-collector
+      app.kubernetes.io/instance: observability.otel-gateway
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            egress.netpol.home.arpa/o11y: allow
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+      toPorts:
+        - ports:
+            - # OTLP/gRPC
+              protocol: TCP
+              port: "4317"
+
+            - # OTLP/HTTP
+              protocol: TCP
+              port: "4318"
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: np-i-a-from-otel
+spec:
+  enableDefaultDeny:
+    egress: false
+  endpointSelector:
+    matchLabels:
+      ingress.netpol.home.arpa/o11y: allow
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/component: opentelemetry-collector
+            app.kubernetes.io/instance: observability.otel-gateway
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: np-e-a-otel-collection
+spec:
+  enableDefaultDeny:
+    egress: false
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/component: opentelemetry-collector
+      app.kubernetes.io/instance: observability.otel-gateway
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            ingress.netpol.home.arpa/o11y: allow
+        - matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
