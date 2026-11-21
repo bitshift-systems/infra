@@ -1,0 +1,20 @@
+[tasks."talos:credentials"]
+run = '''
+mkdir -p "{{ vars.creds_dir }}"
+{{ vars.topf }} talosconfig > "{{ vars.creds_dir }}/talosconfig"
+{{ vars.topf }} kubeconfig --validity 2160h > "{{ vars.creds_dir }}/kubeconfig"
+chmod 600 "{{ vars.creds_dir }}/talosconfig"
+chmod 600 "{{ vars.creds_dir }}/kubeconfig"
+cp="$(yq -e '.nodes[] | select(.role == "control-plane") | (.ip // .host)' "{{ vars.topf_config }}" | head -1)"
+cluster_name="$(kubectl --kubeconfig "{{ vars.creds_dir }}/kubeconfig" config view -o jsonpath='{.clusters[0].name}')"
+kubectl --kubeconfig "{{ vars.creds_dir }}/kubeconfig" config set-cluster "$cluster_name" --server="https://$cp:6443"
+'''
+
+[tasks."talos:apply-node"]
+secrets = ["WG_LON1_PRIVATE_KEY"]
+usage = '''
+arg "<node>" help="The node to apply the configuration to"
+'''
+run = '''
+{{ vars.topf }} apply --nodes-filter "{{ usage.node }}" --allow-not-ready
+'''

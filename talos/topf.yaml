@@ -10,7 +10,7 @@ secretsProvider: topf-secrets
 
 nodes:
   - host: lon1
-    ip: 57.129.192.57
+    ip: 10.42.43.1
     role: control-plane
     data:
       gatewayIngress: true

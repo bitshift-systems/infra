@@ -11,3 +11,8 @@ up: true
 addresses:
   - address: {{ .Node.Data.ipv4.wgAddr }}/24
   - address: {{ .Node.Data.ipv6.wgAddr }}/64
+peers:
+  - publicKey: vKz+v75M8FHF781BPOvUHTZbeTQmLpURwNMJPadYyl0=
+    allowedIPs:
+      - 10.42.43.2/32
+      - fd42:43::2/128

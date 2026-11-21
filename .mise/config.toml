@@ -4,9 +4,17 @@ fnox = { version = "1.50.0", workflow = "release.yml" }
 jactionlint = { version = "2.6.0", workflow = "release.yaml" }
 shellcheck = "0.11.0"
 talosctl = "1.14.6"
+yq = "4.54.3"
+
+[vars]
+creds_dir = "{{ config_root }}/.private/talos"
+topf_config = '{{ config_root }}/talos/topf.yaml'
+topf = 'topf --topfconfig "{{ vars.topf_config }}" --confirm=false'
 
 [env]
 _.path = ["{{ config_root }}/scripts"]
+TALOSCONFIG = "{{ vars.creds_dir }}/talosconfig"
+KUBECONFIG = "{{ vars.creds_dir }}/kubeconfig"
 
 [secrets.fnox]
 
