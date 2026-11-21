@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: opentelemetry-operator
+  namespace: network
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: opentelemetry-operator
+  interval: 30m
+  values:
+    manager:
+      collectorImage:
+        repository: otel/opentelemetry-collector-contrib
+      podLabels:
+        egress.netpol.bitshift.systems/apiserver: allow
+        ingress.netpol.bitshift.systems/apiserver: allow
+        ingress.netpol.bitshift.systems/host: allow
+        ingress.netpol.bitshift.systems/o11y: allow
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          memory: 256Mi
+      serviceMonitor:
+        enabled: true
+    admissionWebhooks:
+      certManager:
+        enabled: true
+    crds:
+      create: true
