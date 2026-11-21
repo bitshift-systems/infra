@@ -1,0 +1,103 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/gateway.envoyproxy.io/envoyproxy_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: envoy-internal
+  namespace: network
+spec:
+  logging:
+    level:
+      default: info
+  ipFamily: DualStack
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyDeployment:
+        replicas: 1
+        pod:
+          nodeSelector:
+            kubernetes.io/hostname: n1
+        container:
+          image: mirror.gcr.io/envoyproxy/envoy:v1.40.2
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 512Mi
+      envoyService:
+        type: LoadBalancer
+        allocateLoadBalancerNodePorts: false
+        externalTrafficPolicy: Cluster
+  shutdown:
+    drainTimeout: 180s
+  telemetry:
+    metrics:
+      prometheus:
+        compression:
+          type: Zstd
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/gateway.networking.k8s.io/gatewayclass_v1.json
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: &name internal
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: *name
+    namespace: network
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/gateway.networking.k8s.io/gateway_v1.json
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: &name internal
+  namespace: network
+spec:
+  gatewayClassName: *name
+  addresses:
+    - type: IPAddress
+      value: 10.42.43.1
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.bitshift.systems"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: bitshift-systems-tls
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: envoy-internal-wg-only
+  namespace: network
+spec:
+  description: Allow ingress to internal only from the WireGuard subnet
+  endpointSelector:
+    matchLabels:
+      gateway.envoyproxy.io/owning-gateway-name: internal
+  ingress:
+    - fromEntities:
+        - cluster
+        - health
+    - fromCIDR:
+        - 10.42.43.0/24

@@ -15,6 +15,9 @@ spec:
     - name: external-eu-v6
       namespace: network
       sectionName: http
+    - name: internal
+      namespace: network
+      sectionName: http
   rules:
     - filters:
         - type: RequestRedirect
