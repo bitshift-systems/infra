@@ -6,4 +6,3 @@ namespace: network
 resources:
   - namespace.yaml
   - envoy-gateway/ks.yaml
-  - external-dns/ks.yaml

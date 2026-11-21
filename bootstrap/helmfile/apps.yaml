@@ -1,0 +1,68 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/helmfile
+bases:
+  - defaults.yaml
+
+helmDefaults:
+  cleanupOnFail: true
+  forceConflicts: true
+  wait: true
+  waitForJobs: true
+
+releases:
+  - name: cilium
+    namespace: kube-system
+    inherit:
+      - template: default
+
+  - name: coredns
+    namespace: kube-system
+    inherit:
+      - template: default
+    needs:
+      - kube-system/cilium
+
+  - name: cert-manager
+    namespace: cert-manager
+    inherit:
+      - template: default
+    needs:
+      - kube-system/coredns
+
+  - name: external-secrets
+    namespace: external-secrets
+    inherit:
+      - template: default
+    needs:
+      - cert-manager/cert-manager
+
+  - name: onepassword-connect
+    namespace: external-secrets
+    inherit:
+      - template: default
+    needs:
+      - external-secrets/external-secrets
+    hooks:
+      - events:
+          - postsync
+        command: kubectl
+        args:
+          - apply
+          - --server-side
+          - --field-manager=kustomize-controller
+          - --filename=../../kubernetes/apps/external-secrets/onepassword-connect/app/clustersecretstore.yaml
+        showlogs: true
+
+  - name: flux-operator
+    namespace: flux-system
+    inherit:
+      - template: default
+    needs:
+      - external-secrets/onepassword-connect
+
+  - name: flux-instance
+    namespace: flux-system
+    inherit:
+      - template: default
+    needs:
+      - flux-system/flux-operator

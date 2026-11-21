@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: external-secrets
+  namespace: external-secrets
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: external-secrets
+  interval: 30m
+  values:
+    image:
+      repository: ghcr.io/external-secrets/external-secrets
+    installCRDs: true
+    certController:
+      image:
+        repository: ghcr.io/external-secrets/external-secrets
+    webhook:
+      image:
+        repository: ghcr.io/external-secrets/external-secrets
+      replicaCount: 2
+      podDisruptionBudget:
+        enabled: true

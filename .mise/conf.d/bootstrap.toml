@@ -1,3 +1,6 @@
+[tasks."bootstrap"]
+depends = ["bootstrap:apply", "talos:credentials", "bootstrap:base", "bootstrap:apps"]
+
 [tasks."bootstrap:apply"]
 description = "Apply Talos configuration to the cluster"
 secrets = ["WG_LON1_PRIVATE_KEY"]
@@ -16,4 +19,9 @@ secrets = [
 run = '''
 kustomize build "{{ config_root }}/bootstrap/kustomize/apps" | envsubst | kubectl apply --server-side --force-conflicts -f -
 helmfile -f "{{ config_root }}/bootstrap/helmfile/crds.yaml" template -q | yq ea -e 'select(.kind == "CustomResourceDefinition")' | kubectl apply --server-side --force-conflicts -f -
+'''
+
+[tasks."bootstrap:apps"]
+run = '''
+helmfile -f "{{ config_root }}/bootstrap/helmfile/apps.yaml" sync --hide-notes
 '''
