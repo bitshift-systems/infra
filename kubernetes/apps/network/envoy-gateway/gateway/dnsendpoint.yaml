@@ -1,0 +1,35 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/externaldns.k8s.io/dnsendpoint_v1alpha1.json
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: envoy-internal
+  namespace: network
+spec:
+  endpoints:
+    # No AAAA: the admin WireGuard peers reach n1 over IPv4 here, so a v6
+    # answer would be preferred and then time out.
+    - dnsName: internal.bitshift.systems
+      recordType: A
+      targets:
+        - 10.42.43.1
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/externaldns.k8s.io/dnsendpoint_v1alpha1.json
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: envoy-external
+  namespace: network
+spec:
+  endpoints:
+    - dnsName: gw-eu.bitshift.systems
+      recordType: A
+      recordTTL: 60
+      targets:
+        - 57.129.192.57
+    - dnsName: gw-eu.bitshift.systems
+      recordType: AAAA
+      recordTTL: 60
+      targets:
+        - 2001:41d0:801:2000::9628
