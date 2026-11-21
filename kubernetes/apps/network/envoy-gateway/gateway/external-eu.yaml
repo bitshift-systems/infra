@@ -19,6 +19,8 @@ spec:
           labels:
             ingress.netpol.bitshift.systems/host: allow
             ingress.netpol.bitshift.systems/internet: allow
+            egress.netpol.bitshift.systems/internet-https: allow  # allow routing to other services
+            egress.netpol.bitshift.systems/cluster: allow  # allow routing to in-cluster services
           # Pod netns sysctls start from kernel defaults (cubic); match the hosts' tuning.
           securityContext:
             sysctls:
