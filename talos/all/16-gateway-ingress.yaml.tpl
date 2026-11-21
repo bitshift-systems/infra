@@ -5,10 +5,8 @@ kind: NetworkRuleConfig
 name: gateway-tcp-ingress
 portSelector:
   ports:
-    - 22
     - 80
     - 443
-    - 2222
   protocol: tcp
 ingress:
   - subnet: 0.0.0.0/0
