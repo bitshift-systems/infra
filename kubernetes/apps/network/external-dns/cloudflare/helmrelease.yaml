@@ -1,0 +1,38 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app cloudflare-dns
+  namespace: network
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: cloudflare-dns
+  interval: 1h
+  values:
+    fullnameOverride: *app
+    provider:
+      name: cloudflare
+    env:
+      - name: CF_API_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: &secret external-dns-cloudflare
+            key: CF_API_TOKEN
+    extraArgs:
+      - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
+      - --crd-source-kind=DNSEndpoint
+      - --zone-id-filter=9b3162d8cff21464366710f49fc89166
+      - --txt-wildcard-replacement=wildcard
+    triggerLoopOnEvent: true
+    policy: sync
+    sources:
+      - crd
+      - gateway-httproute
+    txtOwnerId: bitshift-prod
+    txtPrefix: k8s.
+    domainFilters:
+      - bitshift.systems
+    podAnnotations:
+      secret.reloader.stakater.com/reload: *secret
