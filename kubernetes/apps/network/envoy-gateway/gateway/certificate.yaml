@@ -1,0 +1,23 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: bitshift-systems
+  namespace: network
+spec:
+  secretName: bitshift-systems-tls
+  dnsNames:
+    - bitshift.systems
+    - "*.bitshift.systems"
+  duration: 2160h
+  renewBefore: 72h # LE shortlived profile issues ~160h certs; keep well above the 48h gatus alert
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-cloudflare
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    rotationPolicy: Always
+  usages:
+    - digital signature
