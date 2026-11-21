@@ -18,6 +18,7 @@ spec:
             - operator: Exists
           labels:
             ingress.netpol.bitshift.systems/host: allow
+            ingress.netpol.bitshift.systems/internet: allow
           # Pod netns sysctls start from kernel defaults (cubic); match the hosts' tuning.
           securityContext:
             sysctls:
