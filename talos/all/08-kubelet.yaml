@@ -6,7 +6,11 @@ config:
   shutdownGracePeriod: 120s
   shutdownGracePeriodCriticalPods: 60s
 
-  allowedUnsafeSysctls: []
+  # Set by the envoy gateway pods; pod netns otherwise get kernel defaults.
+  allowedUnsafeSysctls:
+    - net.ipv4.tcp_congestion_control
+    - net.ipv4.tcp_slow_start_after_idle
+    - net.ipv4.tcp_notsent_lowat
 
   systemReserved:
     cpu: 250m
