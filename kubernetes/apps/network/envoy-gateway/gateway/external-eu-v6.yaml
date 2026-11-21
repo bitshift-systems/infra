@@ -112,6 +112,7 @@ spec:
       prometheus:
         compression:
           type: Zstd
+  ipFamily: IPv6
 
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/gateway.networking.k8s.io/gatewayclass_v1.json
