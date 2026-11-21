@@ -32,6 +32,7 @@ spec:
         ref: refs/heads/main
         path: kubernetes/apps
         interval: 1m
+        provider: github
         pullSecret: flux-system
       resources:
         limits:
