@@ -86,11 +86,37 @@ spec:
             name: bitshift-systems-tls
 
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: np-e-a-envoy-internal
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/managed-by: envoy-gateway
+      gateway.networking.k8s.io/gateway-name: internal
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            ingress.netpol.bitshift.systems/internal: allow
+          matchExpressions:
+            - key: k8s:io.kubernetes.pod.namespace
+              operator: Exists
+    - toEndpoints:
+        - matchLabels:
+            control-plane: envoy-gateway
+      toPorts:
+        - ports:
+            - port: '18000'
+              protocol: TCP
+
+---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: envoy-internal-wg-only
+  name: np-i-a-envoy-internal-wg-only
   namespace: network
 spec:
   description: Allow ingress to internal only from the WireGuard subnet
