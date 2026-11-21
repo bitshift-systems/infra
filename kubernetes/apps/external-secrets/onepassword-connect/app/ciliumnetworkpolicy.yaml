@@ -9,8 +9,7 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      app.kubernetes.io/name: onepassword
-      app.kubernetes.io/instance: onepassword
+      app: onepassword-connect
   ingress:
     - fromEndpoints:
         - matchLabels:
@@ -36,8 +35,7 @@ spec:
   egress:
     - toEndpoints:
         - matchLabels:
-            app.kubernetes.io/name: onepassword
-            app.kubernetes.io/instance: onepassword
+            app: onepassword-connect
       toPorts:
         - ports:
             - port: '8080'
