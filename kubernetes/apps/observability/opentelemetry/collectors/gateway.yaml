@@ -237,7 +237,7 @@ spec:
     extensions:
       basicauth/grafana_cloud:
         client_auth:
-          username: "1934240"
+          username: "1934402"
           password: "${env:GCLOUD_TOKEN}"
 
     exporters:
