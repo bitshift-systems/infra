@@ -2,5 +2,5 @@
 # Picked up by the otelcol DaemonSet (hostNetwork) and shipped to VictoriaLogs.
 apiVersion: v1alpha1
 kind: KmsgLogConfig
-name: fluent-bit
-url: tcp://127.0.0.1:5170/
+name: otelcol
+url: tcp://127.0.0.1:5140/
