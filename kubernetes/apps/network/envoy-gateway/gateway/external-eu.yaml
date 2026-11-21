@@ -132,7 +132,7 @@ metadata:
   name: &name external-eu
   namespace: network
   annotations:
-    external-dns.kubernetes.io/target: "51.38.160.51"
+    external-dns.kubernetes.io/target: "57.129.192.57"
 spec:
   gatewayClassName: *name
   addresses:
