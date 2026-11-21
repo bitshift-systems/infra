@@ -5,9 +5,14 @@ run = '''
 topf --topfconfig "{{ config_root }}/talos/topf.yaml" apply --auto-bootstrap --confirm=false
 '''
 
-[tasks."bootstrap:credentials"]
-description = "Fetch credentials for the cluster"
-secrets = ["WG_LON1_PRIVATE_KEY"]
+[tasks."bootstrap:base"]
+secrets = [
+  "FLUX_GHA_CLIENT_ID_B64",
+  "FLUX_GHA_INSTALLATION_ID_B64",
+  "FLUX_GHA_PRIVATE_KEY_B64",
+  "OP_CREDENTIALS_B64",
+  "OP_CONNECT_TOKEN",
+]
 run = '''
-topf --topfconfig "{{ config_root }}/talos/topf.yaml" apply --auto-bootstrap --confirm=false
+kustomize build "{{ config_root }}/bootstrap/kustomize/apps" | envsubst | kubectl apply --server-side --force-conflicts -f -
 '''

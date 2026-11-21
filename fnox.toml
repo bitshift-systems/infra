@@ -10,3 +10,10 @@ vault = "bitshift-prod"
 
 [secrets]
 WG_LON1_PRIVATE_KEY = { provider = "op", value = "wireguard-talos/lon1PrivateKey" }
+
+FLUX_GHA_CLIENT_ID_B64 = { provider = "op", value = "flux-gha/clientId" }
+FLUX_GHA_INSTALLATION_ID_B64 = { provider = "op", value = "flux-gha/installationId" }
+FLUX_GHA_PRIVATE_KEY_B64 = { provider = "op", value = "flux-gha/privateKey" }
+
+OP_CREDENTIALS_B64 = { provider = "op", value = "onepassword/credentialsBase64" }
+OP_CONNECT_TOKEN = { provider = "op", value = "onepassword/connectToken" }
