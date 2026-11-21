@@ -238,7 +238,7 @@ spec:
       otlp_http:
         endpoint: https://otlp.eu01.nr-data.net
         headers:
-          api-key: $${env:NEW_RELIC_API_KEY}
+          api-key: ${env:NEW_RELIC_API_KEY}
         compression: gzip
         timeout: 10s
         retry_on_failure:
