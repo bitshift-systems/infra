@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/helmfile
+bases:
+  - defaults.yaml
+
+helmDefaults:
+  args:
+    - --include-crds
+    - --no-hooks
+    - --skip-schema-validation
+
+releases:
+  - name: external-dns
+    namespace: network
+    chart: oci://ghcr.io/home-operations/charts-mirror/external-dns
+    version: 1.22.0
+
+  - name: envoy-gateway
+    namespace: network
+    inherit:
+      - template: default
+
+  - name: prometheus-operator-crds
+    namespace: observability
+    inherit:
+      - template: default
