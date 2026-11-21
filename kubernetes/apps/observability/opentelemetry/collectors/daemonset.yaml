@@ -101,6 +101,14 @@ spec:
           load: {}
           network: {}
 
+      syslog/new:
+        tcp:
+          listen_address: "[::]:514"
+        protocol: rfc5424
+
+      tcp_log:
+        listen_address: "[::]:5140"
+
     processors:
       memory_limiter:
         check_interval: 1s
@@ -158,6 +166,31 @@ spec:
             statements:
               - set(attributes["instance"], resource.attributes["host.name"])
 
+      transform/talos:
+        error_mode: ignore
+        log_statements:
+          - context: log
+            conditions:
+              - IsString(log.body) and IsMatch(log.body, "^\\{")
+            statements:
+              - merge_maps(log.cache, ParseJSON(log.body), "upsert")
+              - set(resource.attributes["service.name"], log.cache["talos-service"])
+              - set(resource.attributes["host.name"], log.cache["hostname"])
+              - set(log.attributes["level"], log.cache["talos-level"])
+              - set(log.body, log.cache["msg"])
+              - set(log.time_unix_nano, UnixNano(Time(log.cache["talos-time"], "%Y-%m-%dT%H:%M:%S.%fZ")))
+
+      transform/syslog:
+        error_mode: ignore
+        log_statements:
+          - context: log
+            statements:
+              - set(resource.attributes["host.name"], attributes["hostname"])
+              - set(resource.attributes["service.name"], attributes["appname"])
+              - delete_key(attributes, "hostname")
+              - delete_key(attributes, "appname")
+              - set(log.body, attributes["message"])
+
       batch:
         send_batch_size: 1024
         timeout: 5s
@@ -199,4 +232,14 @@ spec:
         logs/k8s:
           receivers: [file_log/pods]
           processors: [memory_limiter, k8s_attributes, batch]
+          exporters: [otlp_http/gateway]
+
+        logs/talos_machine:
+          receivers: [tcp_log]
+          processors: [memory_limiter, transform/talos, batch]
+          exporters: [otlp_http/gateway]
+
+        logs/syslog_new:
+          receivers: [syslog/new]
+          processors: [memory_limiter, transform/syslog, batch]
           exporters: [otlp_http/gateway]
