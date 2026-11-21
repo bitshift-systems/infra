@@ -15,6 +15,13 @@ spec:
             - "10.0.0.0/8"
             - "172.16.0.0/12"
             - "192.168.0.0/16"
+        - cidr: "::/0"
+          except:
+            - "fc00::/7"   # private addresses, including your cluster and wireguard
+            - "fe80::/10"  # link-local
+            - "ff00::/8"   # multicast
+            - "::1/128"    # loopback
+            - "::/128"    # unspecified
 
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
@@ -33,6 +40,13 @@ spec:
             - "10.0.0.0/8"
             - "172.16.0.0/12"
             - "192.168.0.0/16"
+        - cidr: "::/0"
+          except:
+            - "fc00::/7"   # private addresses, including your cluster and wireguard
+            - "fe80::/10"  # link-local
+            - "ff00::/8"   # multicast
+            - "::1/128"    # loopback
+            - "::/128"    # unspecified
       toPorts:
         - ports:
             - port: "443"
