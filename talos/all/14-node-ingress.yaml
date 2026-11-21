@@ -1,0 +1,13 @@
+---
+# Allowed by node address so they work before KubeSpan is up.
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: node-tcp-ingress
+portSelector:
+  ports:
+    - 4240 # cilium-health
+    - 50001 # trustd
+  protocol: tcp
+ingress:
+  - subnet: 57.129.192.57/32 # lon1
+  - subnet: 2001:41d0:801:2000::9628/128 # lon1

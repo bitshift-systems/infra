@@ -1,0 +1,12 @@
+default_provider = "op"
+root = true
+
+[daemon]
+enabled = true
+
+[providers.op]
+type = "1password"
+vault = "bitshift-prod"
+
+[secrets]
+WG_LON1_PRIVATE_KEY = { provider = "op", value = "wireguard-talos/lon1PrivateKey" }

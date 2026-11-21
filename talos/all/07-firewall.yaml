@@ -1,0 +1,76 @@
+---
+apiVersion: v1alpha1
+kind: NetworkDefaultActionConfig
+ingress: block
+
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: apid-ingress
+portSelector:
+  ports:
+    - 50000
+  protocol: tcp
+ingress:
+  - subnet: 10.42.43.0/24
+  - subnet: fd42:43::/64
+  - subnet: 57.129.192.57/32 # lon1
+  - subnet: 2001:41d0:801:2000::9628/128 # lon1
+
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: kubelet-ingress
+portSelector:
+  ports:
+    - 10250
+  protocol: tcp
+ingress:
+  - subnet: 10.42.43.0/24
+  - subnet: fd42:43::/64
+  - subnet: 57.129.192.57/32 # lon1
+  - subnet: 2001:41d0:801:2000::9628/128 # lon1
+
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: kubespan-ingress
+portSelector:
+  ports:
+    - 51820
+  protocol: udp
+ingress:
+  - subnet: 0.0.0.0/0
+  - subnet: ::/0
+
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: admin-wireguard-ingress
+portSelector:
+  ports:
+    - 51821
+  protocol: udp
+ingress:
+  - subnet: 0.0.0.0/0
+  - subnet: ::/0
+
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: metrics-ingress
+portSelector:
+  ports:
+    - 2020
+    - 9090
+    - 9100
+    - 4244 # hubble server, for hubble-relay
+    - 9962
+    - 9963
+    - 9965
+  protocol: tcp
+ingress:
+  - subnet: 10.42.43.0/24
+  - subnet: fd42:43::/64
+  - subnet: 10.244.0.0/16
+  - subnet: fd00::/48

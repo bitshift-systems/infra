@@ -1,0 +1,8 @@
+---
+# Spegel serves layers from the local content store, so containerd must keep them after unpacking.
+apiVersion: v1alpha1
+kind: CRICustomizationConfig
+name: spegel
+content: |
+  [plugins."io.containerd.cri.v1.images"]
+    discard_unpacked_layers = false

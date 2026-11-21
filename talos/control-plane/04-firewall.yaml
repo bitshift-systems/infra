@@ -1,0 +1,26 @@
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: kubernetes-api-ingress
+portSelector:
+  ports:
+    - 6443
+  protocol: tcp
+ingress:
+  - subnet: 10.42.43.0/24
+  - subnet: fd42:43::/64
+  - subnet: 10.244.0.0/16
+  - subnet: fd00::/48
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: etcd-metrics-ingress
+portSelector:
+  ports:
+    - 2381
+  protocol: tcp
+ingress:
+  - subnet: 10.42.43.0/24
+  - subnet: fd42:43::/64
+  - subnet: 10.244.0.0/16
+  - subnet: fd00::/48

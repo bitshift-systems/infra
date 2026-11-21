@@ -1,0 +1,6 @@
+[tasks."bootstrap:apply"]
+description = "Apply Talos configuration to the cluster"
+secrets = ["WG_LON1_PRIVATE_KEY"]
+run = '''
+topf --topfconfig "{{ config_root }}/talos/topf.yaml" apply --auto-bootstrap
+'''

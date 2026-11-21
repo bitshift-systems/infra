@@ -1,0 +1,25 @@
+---
+apiVersion: v1alpha1
+kind: KubeletConfig
+defaultRuntimeSeccompProfileEnabled: true
+config:
+  shutdownGracePeriod: 120s
+  shutdownGracePeriodCriticalPods: 60s
+
+  allowedUnsafeSysctls: []
+
+  systemReserved:
+    cpu: 250m
+    memory: 512Mi
+    ephemeral-storage: 1Gi
+  kubeReserved:
+    cpu: 250m
+    memory: 512Mi
+    ephemeral-storage: 1Gi
+
+  evictionHard:
+    memory.available: 500Mi
+    nodefs.available: 10%
+    nodefs.inodesFree: 5%
+    imagefs.available: 15%
+    imagefs.inodesFree: 5%

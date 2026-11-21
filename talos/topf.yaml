@@ -1,0 +1,30 @@
+---
+clusterName: bitshift
+clusterEndpoint: https://kube.prod.bitshift.systems:6443
+# renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
+kubernetesVersion: v1.37.1
+# renovate: datasource=docker depName=ghcr.io/siderolabs/talos
+talosVersion: 1.14.6
+schematicId: "@schematic.yaml.tpl"
+secretsProvider: topf-secrets
+
+nodes:
+  - host: lon1
+    ip: 57.129.192.57
+    role: control-plane
+    data:
+      gatewayIngress: true
+      rpsCpus: e
+      ipv4:
+        addr: 57.129.192.57
+        wgAddr: 10.42.43.1
+        gateway: 57.129.192.1
+      ipv6:
+        addr: 2001:41d0:801:2000::9628
+        wgAddr: 'fd42:43::1'
+        gateway: 2001:41d0:801:2000::1
+      labels:
+        bitshift.systems/region: eu
+        bitshift.systems/cloud: ovh
+        topology.kubernetes.io/region: eu
+        topology.kubernetes.io/zone: lon

@@ -1,0 +1,14 @@
+---
+apiVersion: v1alpha1
+kind: KubeNetworkConfig
+dnsDomain: cluster.local
+podSubnets:
+  - 10.244.0.0/16
+  - fd00::/48
+serviceSubnets:
+  - 10.96.0.0/12
+  - fd01::/108
+---
+apiVersion: v1alpha1
+kind: KubeFlannelCNIConfig
+$patch: delete

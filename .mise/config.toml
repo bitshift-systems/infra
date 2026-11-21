@@ -1,0 +1,23 @@
+[tools]
+"aqua:postfinance/topf" = "0.6.2"
+fnox = { version = "1.50.0", workflow = "release.yml" }
+jactionlint = { version = "2.6.0", workflow = "release.yaml" }
+shellcheck = "0.11.0"
+talosctl = "1.14.6"
+
+[env]
+_.path = ["{{ config_root }}/scripts"]
+
+[secrets.fnox]
+
+[tasks.wggen]
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+
+privkey=$(wg genkey)
+pubkey=$(echo "$privkey" | wg pubkey)
+
+echo "Private Key: $privkey"
+echo "Public Key: $pubkey"
+'''
