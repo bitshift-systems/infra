@@ -184,7 +184,7 @@ spec:
                 value: allow
           - target:
               kind: Deployment
-              name: (source-controller|helm-controller|kustomize-controller|notification-controller)
+              name: (source-controller|helm-controller|kustomize-controller|notification-controller|image-automation-controller|image-reflector-controller)
             patch: |
               - op: add
                 path: /spec/template/metadata/labels/egress.netpol.bitshift.systems~1apiserver
@@ -194,7 +194,7 @@ spec:
                 value: allow
           - target:
               kind: Deployment
-              name: (source-controller|helm-controller|notification-controller)
+              name: (source-controller|helm-controller|notification-controller|image-automation-controller|image-reflector-controller)
             patch: |
               - op: add
                 path: /spec/template/metadata/labels/egress.netpol.bitshift.systems~1internet-https
