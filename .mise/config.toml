@@ -1,5 +1,6 @@
 [tools]
 "aqua:postfinance/topf" = "0.6.2"
+flux2 = "2.10.0"
 fnox = { version = "1.50.0", workflow = "release.yml" }
 helmfile = { version = "1.8.4", workflow = "releaser.yaml" }
 jactionlint = { version = "2.6.0", workflow = "release.yaml" }
