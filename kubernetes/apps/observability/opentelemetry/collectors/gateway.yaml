@@ -234,9 +234,6 @@ spec:
         send_batch_size: 1024
         timeout: 5s
 
-    connectors:
-      grafana_cloud/connector:
-
     extensions:
       basicauth/grafana_cloud:
         client_auth:
@@ -261,6 +258,8 @@ spec:
           queue_size: 1000
 
     service:
+      extensions: [basicauth/grafana_cloud]
+
       telemetry:
         metrics:
           # Collector >=0.123 removed `metrics.address`; use the readers form.
