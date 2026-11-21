@@ -150,7 +150,7 @@ spec:
         metric_statements:
           - context: datapoint
             statements:
-              - set(attributes["cluster"], "${CLUSTER}") where attributes["cluster"] == nil
+              - set(attributes["cluster"], "bitshift-prod") where attributes["cluster"] == nil
 
       transform/hostmetrics:
         metric_statements:
