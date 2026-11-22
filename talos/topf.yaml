@@ -28,3 +28,24 @@ nodes:
         bitshift.systems/cloud: ovh
         topology.kubernetes.io/region: eu
         topology.kubernetes.io/zone: lon
+
+  - host: lon2
+    ip: 10.42.43.3
+    role: control-plane
+    data:
+      gatewayIngress: true
+      rpsCpus: e
+      miroirDisk: true
+      ipv4:
+        addr: ''
+        wgAddr: 10.42.43.3
+        gateway: ''
+      ipv6:
+        addr: ''
+        wgAddr: 'fd42:43::3'
+        gateway: ''
+      labels:
+        bitshift.systems/region: eu
+        bitshift.systems/cloud: ovh
+        topology.kubernetes.io/region: eu
+        topology.kubernetes.io/zone: lon
