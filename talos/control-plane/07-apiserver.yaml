@@ -4,4 +4,4 @@ kind: KubeAPIServerConfig
 # Talos adds endpoint-derived SANs itself; listed so the name is valid before
 # clusterEndpoint switches to it.
 certExtraSANs:
-  - kube.bitshift.systems
+  - kube.prod.bitshift.systems
