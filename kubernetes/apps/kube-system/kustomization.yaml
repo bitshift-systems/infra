@@ -6,4 +6,5 @@ namespace: kube-system
 resources:
   - cilium/ks.yaml
   - coredns/ks.yaml
+  - reloader/ks.yaml
   - snapshot-controller/ks.yaml
