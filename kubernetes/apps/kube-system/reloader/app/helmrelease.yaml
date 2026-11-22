@@ -1,0 +1,23 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: reloader
+  namespace: kube-system
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: reloader
+  interval: 1h
+  values:
+    fullnameOverride: reloader
+    reloader:
+      deployment:
+        labels:
+          egress.netpol.home.arpa/apiserver: allow
+          ingress.netpol.home.arpa/host: allow
+          ingress.netpol.home.arpa/o11y: allow
+      readOnlyRootFileSystem: true
+      podMonitor:
+        enabled: true
