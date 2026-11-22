@@ -14,6 +14,7 @@ nodes:
     data:
       gatewayIngress: true
       rpsCpus: e
+      miroirDisk: true
       ipv4:
         addr: 57.129.192.57
         wgAddr: 10.42.43.1
