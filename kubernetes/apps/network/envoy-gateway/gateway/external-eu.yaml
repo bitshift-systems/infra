@@ -142,6 +142,8 @@ spec:
   addresses:
     - type: IPAddress
       value: 57.129.192.57
+    - type: IPAddress
+      value: 198.244.188.136
   listeners:
     - name: http
       protocol: HTTP

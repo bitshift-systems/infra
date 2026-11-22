@@ -143,6 +143,8 @@ spec:
   addresses:
     - type: IPAddress
       value: 2001:41d0:801:2000::9628
+    - type: IPAddress
+      value: 2001:41d0:801:2000::4b41
   listeners:
     - name: http
       protocol: HTTP
