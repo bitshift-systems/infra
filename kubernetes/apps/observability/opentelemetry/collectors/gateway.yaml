@@ -271,8 +271,8 @@ spec:
     exporters:
       otlp_http:
         endpoint: https://otlp-gateway-prod-gb-south-1.grafana.net/otlp
-        auth:
-          authenticator: basicauth/grafana_cloud
+        # auth:
+        #   authenticator: basicauth/grafana_cloud
         compression: gzip
         timeout: 10s
         retry_on_failure:
