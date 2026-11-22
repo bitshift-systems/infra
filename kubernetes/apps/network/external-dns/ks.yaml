@@ -3,12 +3,10 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cloudflare-dns
+  name: bunny-dns
 spec:
-  dependsOn:
-    - name: envoy-gateway
   interval: 6h
-  path: ./kubernetes/apps/network/external-dns/cloudflare
+  path: ./kubernetes/apps/network/external-dns/bunny
   prune: true
   sourceRef:
     kind: GitRepository
