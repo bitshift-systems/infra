@@ -16,8 +16,8 @@ spec:
       name: webhook
       webhook:
         image:
-          repository: ghcr.io/contaimlabs/external-dns-bunny-webhook
-          tag: v0.3.0
+          repository: git.ow-ops.eu/ow-ops/external-dns-bunny-webhook
+          tag: main-64605cc-1795248315
         env:
           - name: BUNNY_API_KEY
             valueFrom:
