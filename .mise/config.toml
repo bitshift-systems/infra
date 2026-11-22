@@ -31,3 +31,51 @@ pubkey=$(echo "$privkey" | wg pubkey)
 echo "Private Key: $privkey"
 echo "Public Key: $pubkey"
 '''
+
+[tasks.wgconf]
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+
+nodes=$(yq -o=json -I=0 '[
+  .nodes[] | {
+    "name": .host,
+    "addr": .data.ipv4.wgAddr,
+    "pubAddr": .data.ipv4.addr
+  }
+]' "{{ vars.topf_config }}")
+
+conf_file="{{ config_root }}/.private/talos/wg.conf"
+cat <<EOF > "$conf_file"
+[Interface]
+PrivateKey = $(op read "op://bitshift-prod/wireguard-talos/password")
+EOF
+
+echo $nodes | jq -c '.[]' | while read conf; do
+  pubaddr=$(echo "${conf}" | jq -r '.pubAddr')
+  addr=$(echo "${conf}" | jq -r '.addr')
+  name=$(echo "${conf}" | jq -r '.name')
+  privkey=$(op read "op://bitshift-prod/wireguard-talos/${name}PublicKey")
+
+  echo "Config for ${name} (${addr})"
+  cat <<EOF >> "$conf_file"
+
+[Peer]
+PublicKey = ${privkey}
+Endpoint = ${pubaddr}:51821
+AllowedIPs = ${addr}/32
+PersistentKeepalive = 25
+EOF
+done
+
+# check if the link exists, if not create it
+if ! ip link show wg0 &>/dev/null; then
+  echo "Creating wg0 interface"
+  sudo ip link add dev wg0 type wireguard
+  sudo ip address add dev wg0 10.42.43.2/24
+fi
+
+sudo ip link set down dev wg0
+sudo wg setconf wg0 "$conf_file"
+sudo ip link set up dev wg0
+'''
