@@ -37,13 +37,13 @@ nodes:
       rpsCpus: e
       miroirDisk: true
       ipv4:
-        addr: '198.244.188.136'
+        addr: 198.244.188.136
         wgAddr: 10.42.43.3
-        gateway: '198.244.188.1'
+        gateway: 198.244.188.1
       ipv6:
-        addr: '2001:41d0:801:2000::4b41'
+        addr: 2001:41d0:801:2000::4b41
         wgAddr: 'fd42:43::3'
-        gateway: '2001:41d0:801:2000::1'
+        gateway: 2001:41d0:801:2000::1
       labels:
         bitshift.systems/region: eu
         bitshift.systems/cloud: ovh
