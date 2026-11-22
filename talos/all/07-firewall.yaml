@@ -18,6 +18,8 @@ ingress:
   - subnet: fd00::/48
   - subnet: 57.129.192.57/32 # lon1
   - subnet: 2001:41d0:801:2000::9628/128 # lon1
+  - subnet: 198.244.188.136/32 # lon2
+  - subnet: 2001:41d0:801:2000::4b41/128 # lon2
 
 ---
 apiVersion: v1alpha1
@@ -34,6 +36,8 @@ ingress:
   - subnet: fd00::/48
   - subnet: 57.129.192.57/32 # lon1
   - subnet: 2001:41d0:801:2000::9628/128 # lon1
+  - subnet: 198.244.188.136/32 # lon2
+  - subnet: 2001:41d0:801:2000::4b41/128 # lon2
 
 ---
 apiVersion: v1alpha1

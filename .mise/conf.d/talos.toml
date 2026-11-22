@@ -11,7 +11,7 @@ kubectl --kubeconfig "{{ vars.creds_dir }}/kubeconfig" config set-cluster "$clus
 '''
 
 [tasks."talos:apply-node"]
-secrets = ["WG_LON1_PRIVATE_KEY"]
+secrets = ["WG_LON1_PRIVATE_KEY", "WG_LON2_PRIVATE_KEY"]
 usage = '''
 arg "<node>" help="The node to apply the configuration to"
 '''
