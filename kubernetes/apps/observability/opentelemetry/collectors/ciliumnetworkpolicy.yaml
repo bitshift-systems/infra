@@ -99,6 +99,8 @@ spec:
         - remote-node
       toPorts:
         - ports:
+            - port: "2381" # etcd
+              protocol: TCP
             - port: "8888" # OTel daemonset metrics
               protocol: TCP
             - port: "9962" # Cilium agent metrics
