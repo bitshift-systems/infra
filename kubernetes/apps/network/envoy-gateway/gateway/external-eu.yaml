@@ -136,7 +136,7 @@ metadata:
   name: &name external-eu
   namespace: network
   annotations:
-    external-dns.kubernetes.io/target: "57.129.192.57"
+    external-dns.kubernetes.io/target: "gw-eu.bitshift.systems"
 spec:
   gatewayClassName: *name
   addresses:
