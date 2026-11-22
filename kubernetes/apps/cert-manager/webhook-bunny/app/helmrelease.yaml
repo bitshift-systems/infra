@@ -24,6 +24,10 @@ spec:
           secret.reloader.stakater.com/reload: cert-manager-webhook-bunny-secret
         serviceAccount:
           name: cert-manager-webhook-bunny
+        pod:
+          labels:
+            egress.netpol.bitshift.systems/apiserver: allow
+            ingress.netpol.bitshift.systems/apiserver: allow
         containers:
           app:
             image:
