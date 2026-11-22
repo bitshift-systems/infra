@@ -14,7 +14,7 @@ spec:
   renewBefore: 72h # LE shortlived profile issues ~160h certs; keep well above the 48h gatus alert
   issuerRef:
     kind: ClusterIssuer
-    name: letsencrypt-cloudflare
+    name: letsencrypt-bunny
   privateKey:
     algorithm: ECDSA
     size: 256
