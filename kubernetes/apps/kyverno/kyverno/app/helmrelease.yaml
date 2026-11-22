@@ -1,0 +1,67 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kyverno
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: kyverno
+      version: 3.10.0
+      sourceRef:
+        kind: HelmRepository
+        name: kyverno
+  install:
+    crds: CreateReplace
+  upgrade:
+    crds: CreateReplace
+  values:
+    upgrade:
+      legacyPolicyCheck:
+        podLabels:
+          egress.netpol.bitshift.systems/apiserver: allow
+    crds:
+      migration:
+        podLabels:
+          egress.netpol.bitshift.systems/apiserver: allow
+    webhooksCleanup:
+      podLabels:
+        egress.netpol.bitshift.systems/apiserver: allow
+    admissionController:
+      replicas: 1
+      podLabels:
+        ingress.netpol.bitshift.systems/apiserver: allow
+        egress.netpol.bitshift.systems/apiserver: allow
+        ingress.netpol.bitshift.systems/host: allow
+        ingress.netpol.bitshift.systems/o11y: allow
+      serviceMonitor:
+        enabled: true
+    backgroundController:
+      enabled: false
+      serviceMonitor:
+        enabled: true
+    cleanupController:
+      enabled: false
+      serviceMonitor:
+        enabled: true
+    reportsController:
+      enabled: false
+      serviceMonitor:
+        enabled: true
+    features:
+      admissionReports:
+        enabled: false
+      backgroundScan:
+        enabled: false
+    config:
+      excludeKyvernoNamespace: true
+      webhooks:
+        namespaceSelector:
+          matchExpressions:
+            - key: kubernetes.io/metadata.name
+              operator: NotIn
+              values:
+                - kube-system
+                - flux-system
+                - cert-manager
