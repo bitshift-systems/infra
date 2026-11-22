@@ -16,7 +16,12 @@ spec:
   values:
     autoTieBreaker: true
     replicaCount: 2
+    podLabels:
+      ingress.netpol.bitshift.systems/o11y: allow
+      egress.netpol.bitshift.systems/apiserver: allow
     agent:
+      podLabels:
+        egress.netpol.bitshift.systems/apiserver: allow
       resources:
         requests:
           memory: 64Mi
