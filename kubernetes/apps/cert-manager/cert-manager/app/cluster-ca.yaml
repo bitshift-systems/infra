@@ -26,6 +26,15 @@ spec:
     - crl sign
   nameConstraints:
     critical: true
+    permitted:
+      dnsDomains: &domains
+        - .svc.cluster.local
+        - .cluster.local
+        - .svc
+        - .bitshift.systems
+        - .internal.bitshift.systems
+        - .prod.bitshift.systems
+      uriDomains: *domains
   duration: 87660h # 10 years
   privateKey:
     algorithm: ECDSA
