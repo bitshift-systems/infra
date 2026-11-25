@@ -2,7 +2,7 @@
 clusterName: bitshift
 clusterEndpoint: https://kube.prod.bitshift.systems:6443
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-kubernetesVersion: v1.37.2
+kubernetesVersion: v1.37.3
 talosVersion: 1.14.7
 schematicId: "@schematic.yaml.tpl"
 secretsProvider: topf-secrets
